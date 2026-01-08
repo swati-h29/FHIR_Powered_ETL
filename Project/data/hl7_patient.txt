@@ -1,0 +1,4 @@
+MSH|^~\&|OpenEMR_FHIR|OpenEMR_Facility|PrimaryCare_EHR|PrimaryCare_Facility|20250507214152||ADT^A01|MSG00001|P|2.5
+PID|||57179||Johnson^Criselda Dorothea||19680629|F|||352 Turcotte Harbor Unit 98^^Chelmsford^Massachusetts^00000
+PV1||O||||||||||||||||||||||||||||||||||||||||||20250507214152
+DG1|1||J32.9^Sinusitis^ICD-10|Sinusitis||F
