@@ -1,0 +1,38 @@
+[
+  {
+    "id": 61668014,
+    "conceptId": 36971009,
+    "term": "Sinusitis",
+    "preferredTerm": "Sinusitis"
+  },
+  {
+    "id": 61669018,
+    "conceptId": 36971009,
+    "term": "Sinusitis, NOS",
+    "preferredTerm": "Sinusitis"
+  },
+  {
+    "id": 2958726012,
+    "conceptId": 363166002,
+    "term": "Infection of head",
+    "preferredTerm": "Infective disorder of head"
+  },
+  {
+    "id": 482305010,
+    "conceptId": 363166002,
+    "term": "Infective disorder of head",
+    "preferredTerm": "Infective disorder of head"
+  },
+  {
+    "id": 419887019,
+    "conceptId": 281794004,
+    "term": "Viral upper respiratory tract infection",
+    "preferredTerm": "Viral upper respiratory tract infection"
+  },
+  {
+    "id": 419886011,
+    "conceptId": 281794004,
+    "term": "URTI - Viral upper respiratory tract infection",
+    "preferredTerm": "Viral upper respiratory tract infection"
+  }
+]

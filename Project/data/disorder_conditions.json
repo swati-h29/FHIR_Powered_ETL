@@ -1,0 +1,32 @@
+[
+  {
+    "condition_id": "985ac83d-1695-41d3-9835-a3e33afd9a6f",
+    "snomed_code": "444814009",
+    "display": "Viral sinusitis (disorder)",
+    "verification": "unconfirmed"
+  },
+  {
+    "condition_id": "985ac83d-16b3-4d20-b69e-9c3c1665208d",
+    "snomed_code": "431855005",
+    "display": "Chronic kidney disease stage 1 (disorder)",
+    "verification": "unconfirmed"
+  },
+  {
+    "condition_id": "985ac83d-16e2-4b5c-8902-b0b1637cbdbb",
+    "snomed_code": "444814009",
+    "display": "Viral sinusitis (disorder)",
+    "verification": "unconfirmed"
+  },
+  {
+    "condition_id": "985ac83d-1704-4d96-8d23-43a06bc251bd",
+    "snomed_code": "431856006",
+    "display": "Chronic kidney disease stage 2 (disorder)",
+    "verification": "unconfirmed"
+  },
+  {
+    "condition_id": "985ac83d-1708-4d07-a396-09e168227e87",
+    "snomed_code": "90781000119102",
+    "display": "Microalbuminuria due to type 2 diabetes mellitus (disorder)",
+    "verification": "unconfirmed"
+  }
+]
