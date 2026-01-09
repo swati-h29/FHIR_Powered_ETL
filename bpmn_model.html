@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BPMN Model - Enhancing Interoperability</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sticky Vertical Navigation Bar -->
+  <div class="sidebar">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="bpmn_model.html">BPMN Model</a></li>
+        <li><a href="etl_pipeline.html">ETL Pipeline</a></li>
+        <li><a href="insights.html">Insights</a></li>
+        <li><a href="contributions.html">Contributions</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="https://github.com/swati-h29/FHIR_Powered_ETL" class="github-btn" target="_blank">
+        <img src="images/github_image.png" class="github-icon" alt="GitHub Logo">
+        <span>View Project on GitHub</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="content">
+    <!-- BPMN Section -->
+    <section id="bpmn" class="section-bg">
+      <h1>BPMN Model</h1>
+      <p style="margin-top: 30px; margin-bottom: 30px;">The BPMN (Business Process Model and Notation) diagram illustrates a well-structured process that models the referral of a patient from a Primary Care Clinic to a Hospital. The model is divided into two primary pools: the Primary Care Clinic and the Hospital. The Hospital pool itself is further subdivided into lanes Registration and Specialist, each responsible for distinct parts of the process. The model captures all major stages, including patient referral, specialist treatment, outcome decisions, communication, and follow-up, while maintaining BPMN 2.0 standards and Camunda compatibility.</p>
+      <a href="https://modeler.camunda.io/share/69d169f8-1eea-4abd-b7e4-14b0d500d14b" target="_blank">
+        <button style="padding: 10px 20px; background-color: #0072ff; color: white; border: none; border-radius: 8px; font-size: 16px;">View BPMN Diagram</button>
+      </a>
+      <img src="images/BPMN Diagram.png" alt="BPMN Diagram" class="section-image">
+      <p style="margin-top: 50px;">The process begins in the Primary Care Clinic pool with a Start Event labeled “Patient Referred to a Specialist.” This marks the initiation of the referral process. A Send Task labeled "Referral Sent to Hospital" transmits the referral via a Message Flow to the Hospital pool. The referral is received by a Message Start Event in the Hospital's Registration lane, indicating that the hospital process is triggered by the incoming referral. Within the hospital, the referral is first reviewed and the patient is registered through a series of Tasks. Once the patient is registered, the process transitions to the Specialist lane, where the core clinical interactions occur. The patient is evaluated by a specialist and provided with the necessary treatment. After treatment, a decision must be made regarding the outcome. This is modeled through an exclusive gateway labeled “Further Treatment Needed?” which presents two paths. If the issue is resolved, the patient is discharged with instructions, and a Send Task sends a treatment summary back to the Primary Care Clinic. If further treatment is needed, the patient is referred back to the Clinic for follow-up using a send task “Refer Back to Primary Care Clinic.” Both of these communications use Message Flows to the clinic.</p>
+      <p style="margin-top: 30px;">Regardless of the path taken, the hospital communicates with the Primary Care Clinic. The hospital sends either a treatment summary or referral back, the Primary Care Clinic begins a separate process triggered by a Message Start Event. The clinic waits for one of two possible messages using an Event-Based Gateway labeled "Wait for Hospital Response,” and receives either "Treatment Summary Received" or "Referral Back Received" via Message Intermediate Catch Events. These paths are merged using an Exclusive Gateway labeled “Hospital Message”, after which the clinic updates the patient’s record and schedules follow-up care. This ensures that care is continued seamlessly and documented properly. The process concludes with a final End Event labeled “Follow-up Scheduled”.</p>
+      <p style="margin-top: 30px; margin-bottom: 20px;">To conclude, the BPMN model depicts each step of the referral, treatment, and follow-up process, ensuring clear communication between the Primary Care Clinic and the Hospital.</p>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Enhancing Interoperability. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

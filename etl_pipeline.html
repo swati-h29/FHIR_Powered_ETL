@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ETL Pipeline Documentation – Enhancing Interoperability</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="bpmn_model.html">BPMN Model</a></li>
+        <li><a href="etl_pipeline.html">ETL Pipeline</a></li>
+        <li><a href="insights.html">Insights</a></li>
+        <li><a href="contributions.html">Contributions</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+      <a href="https://github.com/swati-h29/FHIR_Powered_ETL" class="github-btn" target="_blank">
+        <img src="images/github_image.png" class="github-icon" alt="GitHub Logo">
+        <span>View Project on GitHub</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main content wrapper -->
+  <div class="content">
+    <div class="content-inner">
+      <section id="etl">
+        <h1>ETL Pipeline Documentation</h1>
+        <p>
+          This ETL pipeline extracts clinical data from an OpenEMR FHIR server, enriches it via SNOMED CT logic, and loads it into a Primary Care EHR server enforcing custom validation profiles. Implemented as modular Python scripts, it follows best practices for healthcare interoperability.
+        </p>
+
+        <!-- Coding Tasks Links -->
+        <h2>Coding Tasks</h2>
+        <ul>
+          <li><a href="https://github.com/swati-h29/FHIR_Powered_ETL/blob/master/Project/task%201.py" target="_blank">Task 1 – Parent SNOMED Condition</a></li>
+          <li><a href="https://github.com/swati-h29/FHIR_Powered_ETL/blob/master/Project/task%202.py" target="_blank">Task 2 – Child SNOMED Condition</a></li>
+          <li><a href="https://github.com/swati-h29/FHIR_Powered_ETL/blob/master/Project/task%203.py" target="_blank">Task 3 – Observation</a></li>
+          <li><a href="https://github.com/swati-h29/FHIR_Powered_ETL/blob/master/Project/task%204.py" target="_blank">Task 4 – Procedure</a></li>
+          <li><a href="https://github.com/swati-h29/FHIR_Powered_ETL/blob/master/Project/task%205.py" target="_blank">Task 5 – HL7 v2 Message Generation</a></li>
+        </ul>
+
+        <!-- Extraction -->
+        <h2>Extraction</h2>
+        <img src="images/extraction_image.png" alt="ETL Extraction" class="section-image">
+        
+        <h3 style="font-size: 25px;">API Endpoints</h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  OpenEMR FHIR API: </strong><code>https://in-info-web20.luddy.indianapolis.iu.edu/apis/default/fhir</code></p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  Patient query: </strong><code>GET /Patient?name=Criselda&gender=female</code> (Task 1) retrieved patient data (name: <code>Criselda Dorothea Johnson, birth date: 1968-06-29</code>).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  Condition query: </strong>GET /Condition?patient={id} fetched conditions, filtered for disorders (e.g., <code>Viral sinusitis</code>, SNOMED CT code <code>"444814009"</code>) using a for loop and if condition checking for <code>"(disorder)"</code> in the display name.</p>
+        
+
+        <h3 style="font-size: 25px;">Authentication &amp; Authorization</h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  Bearer tokens</strong> loaded from <code>data/access_token.json</code> via <code>get_access_token()</code>.</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  Headers: Authorization: </strong> Bearer [token], Content-Type: <code>application/json</code>.</p>
+
+        <h3 style="font-size: 25px;">Error Handling</h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Checked status codes (e.g., <code>200 for GETs, 201 for POSTs</code>).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Skipped records with non-200 status codes, logging errors (e.g., <code>"No patient found"</code>).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  </strong>Saved JSON outputs (e.g., <code>disorder_condition.json</code>) for debugging and traceability.</p>
+        <p>
+        <pre><code class="language-python">def get_condition_snomed(patient_id):
+    url = f"{BASE_URL}/Condition?patient={patient_id}"
+    res = requests.get(url, headers=get_headers())
+    data = res.json()
+    if res.status_code == 200 and 'entry' in data:
+        save_json(data, "all_conditions")
+        disorder_conditions = []
+        for entry in data.get('entry', []):
+            resource = entry.get('resource', {})
+            code_codings = resource.get('code', {}).get('coding', [])
+            display = code_codings[0].get('display', '')
+            if '(disorder)' in display:
+                disorder_conditions.append({
+                    'condition_id': resource.get('id'),
+                    'snomed_code': code_codings[0].get('code'),
+                    'display': display,
+                    'verification': resource.get('verificationStatus', {}).get('coding', [])[0].get('code')
+                })
+        save_json(disorder_conditions, "disorder_conditions")
+        return disorder_conditions
+    return None
+</code></pre>
+
+        
+        
+        </p>
+
+        <!-- Transformation -->
+        <h2>Transformation</h2>
+        <img src="images/transformation_image.png" alt="ETL Transformation" class="section-image">
+       
+        <p style="margin-top: 20px; margin-bottom: 20px;">For each transformation, we parsed the raw FHIR JSON and either modified or added missing fields. We structured addresses to include city, district, and postal code. In Condition resources, we added severity, category, and bodySite fields using proper SNOMED values. All formatting was done in Python using native dictionaries and helper functions for clarity and reuse. These transformations ensured compatibility with the target server’s <code>$validate</code> conformance check.
+        </p>
+        <h3 style="font-size: 25px;">Techniques for Cleaning and Formatting:</h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Filtered conditions to include only disorders (e.g., Viral sinusitis in <code>disorder_condition.json</code>) using a for loop and if condition.</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Added required FHIR fields: meta.profile (e.g., <code>http://example.org/StructureDefinition/my-patient-profile</code>), <code>deceasedBoolean: false</code>, and <code>address.district: "DefaultDistrict"</code> in <code>patient_details_payload.json</code>.</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Enriched Condition resources with severity, category, and bodySite (e.g., <code>"Nasal sinus structure"</code> in <code>parent_condition_payload.json</code>).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  </strong>Used SNOMED CT Hermes API for parent <code>(constraint=>!{code})</code> and child <code>(constraint=<<{code})</code> lookups (e.g., <code>"Sinusitis"</code> and <code>"Viral sinusitis"</code>).</p>
+        
+
+        <h3 style="font-size: 25px;">Tools for Target API Format:</h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Python json library to structure FHIR payloads (e.g., <code>child_condition_payload.json</code>).
+</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  </strong>hl7apy library for HL7 v2 message generation (Task 5), mapping FHIR data to segments like DG1 (ICD-10 <code>"J32.9"</code>).</p>
+        <pre><code class="language-python"> # Transformation logic across ETL tasks
+
+# Patient transformation
+full_name = f"{patient['name'][0]['family']}^{patient['name'][0]['given'][0]}"
+gender = patient.get("gender", "").upper()
+gender = {"MALE": "M", "FEMALE": "F"}.get(gender, gender)
+birthdate = patient.get("birthDate", "").replace("-", "")
+address = patient.get("address", [{}])[0]
+address_str = f"{address.get('line', [''])[0]}^^{address.get('city', '')}^{address.get('state', '')}^{address.get('postalCode', '')}"
+
+# Condition transformation
+condition_code = condition["code"]["coding"][0]["code"]
+condition_display = condition["code"]["coding"][0]["display"]
+
+# Map SNOMED to ICD-10
+map_url = f"http://159.65.173.51:8080/v1/snomed/concepts/{condition_code}/map/447562003"
+icd_code = requests.get(map_url).json()[0].get("mapTarget")
+
+# Observation (BP) transformation
+bp_obs = {
+    "component": [
+        {
+            "code": {"coding": [{"code": "8480-6", "system": "http://loinc.org"}]},
+            "valueQuantity": {"value": bp["systolic"], "unit": "mmHg"}
+        },
+        {
+            "code": {"coding": [{"code": "8462-4", "system": "http://loinc.org"}]},
+            "valueQuantity": {"value": bp["diastolic"], "unit": "mmHg"}
+        }
+    ]
+}
+
+# Procedure transformation
+procedure_fhir = {
+    "code": {
+        "coding": [{
+            "system": "http://snomed.info/sct",
+            "code": procedure["snomed_code"],
+            "display": procedure["description"]
+        }]
+    }
+}
+
+               </code></pre>
+
+        <!-- Loading -->
+        <h2>Loading</h2>
+        <img src="images/loading_image.png" alt="ETL Loading" class="section-image">
+        <p>
+            After transformation, we loaded the processed resources into the Primary Care FHIR server via POST requests. Each request sent a JSON object representing a fully formed FHIR resource (Patient, Condition, etc.) to endpoints like <code>/Patient</code> and <code>/Condition</code>. These resources included the necessary metadata and profile declarations so they would pass server-side validation. The Python <code>requests.post()</code> method was used to upload data, and success was confirmed with <code>status_code == 201</code>.
+        <h3>Process: </h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 25px; margin-bottom: 10px"><strong>•  </strong>Posted Patient resource <code>(patient_details_payload.json)</code> to <code>http://137.184.71.65:8080/fhir/Patient</code> (Task 1), confirmed by status code <code>201</code>.</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Posted Condition resources (<code>parent_condition_payload.json</code>, <code>child_condition_payload.json</code>) to<code> http://137.184.71.65:8080/fhir/Condition</code> (Tasks 1, 2).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 10px;"><strong>•  </strong>Posted Blood Pressure Observation (Task 3) to <code>http://137.184.71.65:8080/fhir/Observation</code> and Tooth Extraction Procedure (Task 4) to <code>http://137.184.71.65:8080/fhir/Procedure</code>.</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  </strong>Saved resources locally (e.g., <code>patient_details_payload.json</code>, <code>parent_condition_payload.json</code>) for validation and debugging.</p>
+
+        <h3>Validation: </h3>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 25px; margin-bottom: 10px"><strong>•  </strong>Resources included <code>meta.profile</code> for separate validation against custom profiles (e.g., <code>http://example.org/StructureDefinition/my-condition-profile</code>).</p>
+        <p style="list-style-position: inside; padding-left: 2em; margin-top: 10px; margin-bottom: 30px;"><strong>•  </strong>Validation was performed outside the ETL process, as instructed.</p>
+          
+        <pre><code class="language-python">
+res_patient = requests.post(PRIMARY_PATIENT_URL, headers=get_headers(), json=patient_payload)
+if res_patient.status_code != 201:
+    print(" Failed to post patient.")
+    return
+print(" Patient created:", res_patient.json()['id'])
+save_json(patient_payload, "patient_details_payload")</code></pre>
+
+        <!-- Detailed Task Descriptions -->
+        <h2>Task Details</h2>
+
+        <h3>Task 1: Parent SNOMED Condition</h3>
+       <ul>
+        <li class="output-point">Extracted a patient (e.g., <code>Criselda Dorothea Johnson</code>) and their conditions from OpenEMR.
+        <li class="output-point">Retrieved SNOMED CT code (e.g., <code>"444814009"</code> for Viral sinusitis) and queried Hermes with <code>constraint=>!{code}</code> to get a parent term (<code>"Sinusitis"</code>, code <code>"36971009"</code>).</li>
+        <li class="output-point">Created a Patient resource (patient_details_payload.json) and a Condition resource (<code>parent_condition_payload.json</code>) with fields like <code>meta.profile, clinicalStatus, and bodySite ("Nasal sinus structure")</code></li>
+        <li class="output-point">Posted both to Primary Care EHR, confirmed by <code>status 201</code> (output: <code>"Condition created: 1755"</code>).</li>
+        <li class="output-point">Saved as JSON for validation.</li>
+       </ul>
+        
+        <pre><code class="language-python">
+url = f"{SNOMED_HERMES_URL}/search?constraint=>!{code}"
+res = requests.get(url)
+parent_code = res.json()[0]["conceptId"]
+parent_term = res.json()[0]["preferredTerm"]</code></pre>
+
+        <p>
+          <strong>Challenge:</strong> Initial selection of hypertriglyceridemia failed due to spelling mismatch ("hypertriglyceridaemia") and missing finding site.<br>
+          <strong>Resolution:</strong> Selected a patient with sinusitis, which had clear SNOMED mappings.
+        </p>
+
+        <h3 style="margin-top: 50px; margin-bottom: 25px;">Task 2: Child SNOMED Condition</h3>
+       <ul>
+        <li class="output-point">Reused the Task 1 patient and retrieved a child SNOMED term ("Viral sinusitis", code <code>"444814009"</code>) using <code>constraint=<<{code}</code>.</li>
+        <li class="output-point">Created a Condition resource (<code>child_condition_payload.json</code>) with similar structure, posted to <code>http://137.184.71.65:8080/fhir/Condition</code> (output: <code>"Child Condition Created: 1756"</code>).</li>
+        <li class="output-point">Saved as JSON for validation.</li>
+       </ul>
+        
+        <pre><code class="language-python">
+url = f"{SNOMED_HERMES_URL}/search?constraint=<<{code}"
+res = requests.get(url)
+child_code = res.json()[0]["conceptId"]
+child_term = res.json()[0]["preferredTerm"]</code></pre>
+        <p>
+          <strong>Challenge:</strong> Some codes had no children.<br>
+          <strong>Resolution:</strong> Used error handling to skip conditions without child terms, logging a warning.
+
+        </p>
+
+        <h3 style=" margin-top: 50px; margin-bottom: 25px;">Task 3: Observation</h3>
+       <ul>
+        <li class="output-point">Checked for existing Blood Pressure Observation in OpenEMR; none found, so created a synthetic Observation using LOINC codes (<code>85354-9</code> for panel, <code>8480-6</code> for systolic, <code>8462-4</code> for diastolic)</li>
+        <li class="output-point">Structured with status, category, component (122/83 mmHg), and subject referencing the Task 1 patient.</li>
+        <li class="output-point">Posted to <code>http://137.184.71.65:8080/fhir/Observation</code> (output: <code>"Blood Pressure observation successfully created 1757"</code>).</li>
+       </ul>
+        
+        <pre><code class="language-python">
+observation_payload = {
+    "resourceType": "Observation",
+    "status": "final",
+    "category": [{
+        "coding": [{
+            "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+            "code": "vital-signs"
+        }]
+    }],
+    "code": {
+        "coding": [{
+            "system": "http://loinc.org",
+            "code": "85354-9",
+            "display": "Blood pressure panel with all children optional"
+        }]
+    },
+    "subject": {"reference": f"Patient/{patient_id}"},
+    "component": [
+        {
+            "code": {
+                "coding": [{"system": "http://loinc.org", "code": "8480-6"}]
+            },
+            "valueQuantity": {"value": 122, "unit": "mmHg"}
+        },
+        {
+            "code": {
+                "coding": [{"system": "http://loinc.org", "code": "8462-4"}]
+            },
+            "valueQuantity": {"value": 83, "unit": "mmHg"}
+        }
+    ]
+}</code></pre>
+        <p>
+          <strong>Challenge:</strong> Observation structures are complex and required nesting of components.          <br>
+          <strong>Resolution:</strong> We followed the FHIR examples closely and validated JSON structure before posting.
+        </p>
+
+        <h3 style=" margin-top: 50px; margin-bottom: 25px;">Task 4: Procedure</h3>
+       <ul> 
+        <li class="output-point">Created a Procedure resource for Functional Endoscopic Sinus Surgery (SNOMED CT code <code>"1220582003"</code>) since no procedures existed in OpenEMR</li>
+        <li class="output-point">Included status, code, subject, and performedDateTime, posted to <code>http://137.184.71.65:8080/fhir/Procedure</code> (output: <code>"Procedure successfully created"</code>).</li>
+       </ul> 
+        
+        <pre><code class="language-python">
+procedure_payload = {
+    "resourceType": "Procedure",
+    "status": "completed",
+    "code": {
+        "coding": [{
+            "system": "http://snomed.info/sct",
+            "code": "1220582003",
+            "display": "Functional Endoscopic Sinus Surgery (Procedure)"
+        }]
+    },
+    "subject": {"reference": f"Patient/{patient_id}"},
+    "performedDateTime": datetime.datetime.now().isoformat()
+}</code></pre>
+        <p>
+          <strong>Challenge:</strong> The resource structure was unfamiliar at first.
+          <br>
+          <strong>Resolution:</strong> We used FHIR documentation and SNOMED browser to ensure proper structure and concept selection.
+
+        </p>
+
+        <h3 style=" margin-top: 50px; margin-bottom: 25px;">Task 5: HL7 v2 Message Generation</h3>
+       <ul> 
+        <li class="output-point">Generated an <code>ADT_A01</code> message using hl7apy, pulling data from <code>patient_details_payload.json</code> and <code>parent_condition_payload.json</code>.</li>
+        <li class="output-point">Included segments: MSH, PID, PV1, DG1 (ICD-10 <code>"J32.9"</code> for Sinusitis).</li>
+        <li class="output-point">Saved as new_patient.txt (output: <code>MSH|^~&|OpenEMR_FHIR|...</code>).</li>
+       </ul> 
+        
+        <pre><code class="language-python">
+from hl7apy.core import Message
+msg = Message("ADT_A01")
+msg.msh.msh_3 = "OpenEMR_FHIR"
+msg.msh.msh_9 = "ADT^A01"
+pid = Segment("PID")
+pid.pid_3 = patient_id
+pid.pid_5 = full_name
+msg.add(pid)
+with open(output_file, "w") as f:
+    f.write(msg.to_er7())
+        </code></pre>
+        
+      </section>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Enhancing Interoperability. All Rights Reserved.</p>
+  </footer>
+</body>
+</html>

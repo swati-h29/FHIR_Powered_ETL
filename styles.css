@@ -1,0 +1,345 @@
+:root {
+  /* Color Palette */
+  --accent: #85bcf2;        /* Dodger Blue for headings & buttons */
+  --highlight: #d3dce4;     /* Darker blue for hovers */
+  --sidebar-bg: #22303C;    /* Deep slate for sidebar */
+  --content-bg: #1E1E1E;     /* Charcoal for content area */
+  --section-bg: #2A2A2A;     /* Dark gray for sections */
+  --code-bg: #491111;        /* Dark gray for code blocks */
+  --text-light: #f1f1f1;
+  --text-muted: #888888;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  RESET
+──────────────────────────────────────────────────────────────────*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  BODY & BACKGROUND
+──────────────────────────────────────────────────────────────────*/
+body {
+  font-family: 'Orbitron', sans-serif;
+  line-height: 1.6;
+  color: var(--text-light);
+  background: linear-gradient(to right, #7e838c, #788a9b);
+}
+
+/*──────────────────────────────────────────────────────────────────
+  SIDEBAR
+──────────────────────────────────────────────────────────────────*/
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  overflow-y: auto;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  width: 100%;
+}
+
+.sidebar nav ul li {
+  margin: 15px 0;
+}
+
+.sidebar nav ul li a {
+  display: block;
+  width: 100%;
+  padding: 10px 20px;
+  color: var(--text-light);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  transition: background 0.3s, color 0.3s;
+  text-align: left;
+}
+
+.sidebar nav ul li a:hover {
+  background-color: var(--highlight);
+  color: #000;
+}
+
+/* Decorative tagline under nav */
+.sidebar nav ul::after {
+  content: "Bridging Healthcare Data Interoperability";
+  display: block;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-style: italic;
+  margin: 35px 0 20px 20px;
+}
+
+/* GitHub Button */
+.github-btn {
+  margin-top: auto;
+  margin-bottom: 20px;
+  padding: 12px 25px;
+  background-color: var(--accent);
+  color: var(--text-light);
+  border-radius: 50px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.3s ease;
+}
+
+.github-btn:hover {
+  background-color: var(--highlight);
+  color: #000;
+}
+
+.github-btn .github-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.github-btn span {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  MAIN CONTENT
+──────────────────────────────────────────────────────────────────*/
+.content {
+  margin-left: 200px;
+  padding: 40px 20px;
+  background-color: var(--content-bg);
+  min-height: 100vh;
+  display: flex;       /* turn on flex */
+  /* no need for width calc any more */
+  overflow-y: auto;
+}
+
+
+.content-inner {
+  width: 100%;
+  /* no more max‑width so it uses the full .content width */
+  max-width: none;
+  /* remove auto centering since we want edge‑to‑edge */
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  /* flex: 1 will ensure it fills the parent flex container */
+  flex: 1;
+}
+
+
+/*──────────────────────────────────────────────────────────────────
+  SECTION STYLING
+──────────────────────────────────────────────────────────────────*/
+section {
+  background-color: var(--section-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  padding: 30px;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  TYPOGRAPHY
+──────────────────────────────────────────────────────────────────*/
+h1 {
+  font-size: 2.8rem;
+  color: var(--accent);
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2.2rem;
+  color: var(--accent);
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  font-size: 1.6rem;
+  color: var(--highlight);
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  IMAGES
+──────────────────────────────────────────────────────────────────*/
+.section-image {
+  display: block;
+  margin: 20px auto;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 1200px;
+  height: 450px;
+  object-fit: contain;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  LISTS & TABLES
+──────────────────────────────────────────────────────────────────*/
+ul {
+  list-style: disc inside;
+  margin: 20px 0;
+  padding-left: 20px;
+}
+
+ul li {
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #444;
+  text-align: left;
+}
+
+th {
+  background-color: #333;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  CODE BLOCKS
+──────────────────────────────────────────────────────────────────*/
+pre {
+  background: var(--code-bg);
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  background: #333;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  FOOTER
+──────────────────────────────────────────────────────────────────*/
+footer {
+  background: #0e4c97;
+  color: var(--text-light);
+  text-align: center;
+  padding: 20px 0;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  SMOOTH SCROLLING
+──────────────────────────────────────────────────────────────────*/
+html {
+  scroll-behavior: smooth;
+}
+
+/*──────────────────────────────────────────────────────────────────
+  RESPONSIVE
+──────────────────────────────────────────────────────────────────*/
+@media (max-width: 768px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px 0;
+  }
+  .sidebar nav ul {
+    display: flex;
+    gap: 10px;
+  }
+  .content {
+    margin-left: 0;
+    width: 100%;
+    display: block;
+  }
+  .content-inner {
+    max-width: none;
+  }
+  .github-btn {
+    display: none;
+  }
+}
+
+
+
+
+
+
+
+.image-row {
+  display: flex;
+  flex-wrap: wrap;        /* allow wrapping on narrow screens */
+  gap: 20px;              /* space between images */
+  justify-content: center;/* center the row */
+  margin: 2em 0;          /* optional vertical spacing */
+}
+
+.image-row .section-image {
+  width: 48%;             /* roughly half the container each */
+  margin: 0;              /* reset any extra spacing */
+  height: auto;           /* keep aspect ratio */
+  object-fit: contain;    /* scale nicely inside its box */
+}
+
+/* ──────────────────────────────────────────────────────────────
+   Coding Tasks links (40–60 ETL page only)
+────────────────────────────────────────────────────────────── */
+/* ──────────────────────────────────────────────────────────────
+   Coding Tasks links (ETL page only)
+────────────────────────────────────────────────────────────── */
+#etl ul li a {
+  color: #4dabf7;            /* your chosen blue for tasks */
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+#etl ul li a:hover {
+  color: #63b3ed;            /* lighter on hover */
+  text-decoration: underline;
+}
+
+
+/* ──────────────────────────────────────────────────────────────
+   Don’t flex‑shrink content too much around tablet widths
+────────────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .content {
+    display: block;          /* let content take full width below 1024px */
+  }
+  .content-inner {
+    max-width: none;         /* remove the desktop max‑width cap */
+    width: 100%;
+  }
+}
+
+
