@@ -29,7 +29,7 @@ The workflow emphasizes reproducibility, correctness, and alignment with healthc
 ## ETL Architecture Overview
 
 The diagram below illustrates the end-to-end architecture of the ETL pipeline and the interaction between system components.
-![img.png](Images/img.png)
+![img.png](images/img.png)
 
 ## Architecture Description
 
