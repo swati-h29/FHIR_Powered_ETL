@@ -47,7 +47,7 @@ The diagram below illustrates the end-to-end architecture of the ETL pipeline an
 - POST requests load transformed resources into the target FHIR server
 
 ## Repository Structure
-
+```
 FHIR_Powered_ETL/
 ├── index.html                # Project homepage
 ├── bpmn.html                 # BPMN workflow visualization
@@ -79,6 +79,7 @@ FHIR_Powered_ETL/
 │
 ├── README.md                 # Project documentation
 └── requirements.txt          # Python dependencies
+```
 
 ## Prerequisites
 
