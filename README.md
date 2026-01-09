@@ -7,7 +7,7 @@ The project demonstrates standards-based healthcare data exchange using FHIR, OA
 ## Project Website
 
 The project website provides detailed documentation, BPMN diagrams, screenshots, and insights derived from the ETL workflow.
-[ETL Project Website] https://pages.github.iu.edu/shurmad/group4_health_info_standards/
+[ETL Project Website] https://swati-h29.github.io/FHIR_Powered_ETL/
 
 
 ## Project Overview
@@ -19,11 +19,8 @@ The workflow emphasizes reproducibility, correctness, and alignment with healthc
 ## Core ETL Workflow
 
 - Extract clinical data from a FHIR server using RESTful APIs
-
 - Transform FHIR resources by filtering, restructuring, and normalizing fields
-
 - Load processed data into structured JSON outputs
-
 - Verify results through inspection of generated artifacts
 
 ## ETL Architecture Overview
