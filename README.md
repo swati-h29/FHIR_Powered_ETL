@@ -91,7 +91,7 @@ FHIR_Powered_ETL/
 
 1. Clone the repository
 ```
-https://github.iu.edu/shurmad/group4_health_info_standards/tree/master
+https://github.com/swati-h29/FHIR_Powered_ETL
 ```
 2. Create and activate a virtual environment
 ```
