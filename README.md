@@ -50,8 +50,8 @@ FHIR_Powered_ETL/
 ├── bpmn.html                 # BPMN workflow visualization
 ├── etl_doc.html              # Detailed ETL documentation
 ├── insights.html             # Project insights and findings
-├── team_contributions.html   # Team member contributions
-├── about.html                # Project and team overview
+├── contributions.html        
+├── about.html                # Project overview
 │
 ├── css/                      # Website stylesheets
 ├── images/                   # Website images and diagrams
